@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+python-dotenv
+
+langchain
+langgraph
+
+google-generativeai
+
+qdrant-client
+
+pydantic
+python-multipart
+
+tiktoken
+
+pypdf

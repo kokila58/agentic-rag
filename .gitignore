@@ -1,0 +1,167 @@
+
+
+# PYTHON
+
+
+**pycache**/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+*.pyo
+
+
+# VIRTUAL ENVIRONMENTS
+
+
+
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+
+# ENVIRONMENT VARIABLES (NEVER PUSH SECRETS)
+
+
+.env
+.env.*
+*.env
+secrets.env
+
+
+# LOG FILES
+
+
+*.log
+logs/
+log/
+
+
+# TESTING / COVERAGE
+
+
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+
+# BUILD FILES
+
+
+build/
+dist/
+.eggs/
+*.egg-info/
+*.whl
+pip-wheel-metadata/
+
+
+# JUPYTER NOTEBOOK
+
+
+.ipynb_checkpoints
+
+
+# VECTOR DATABASES (LOCAL AI STORAGE)
+
+
+qdrant_storage/
+qdrant_data/
+faiss_index/
+chroma/
+chroma_db/
+vector_store/
+embeddings_cache/
+
+
+# DOCUMENT STORAGE (RAG FILES)
+
+
+documents/
+uploads/
+data/
+dataset/
+pdfs/
+
+
+# CACHE FILES
+
+
+.cache/
+.cache/*
+*.cache
+
+
+# TEMP FILES
+
+
+
+tmp/
+temp/
+*.tmp
+*.temp
+
+
+# DATABASE FILES
+
+
+*.db
+*.sqlite3
+*.sqlite
+
+
+# OS FILES
+
+
+.DS_Store
+Thumbs.db
+
+
+# IDE FILES
+
+
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+
+# DOCKER (OPTIONAL)
+
+
+docker-compose.override.yml
+
+
+# TERRAFORM (IF CLOUD INFRA)
+
+
+.terraform/
+*.tfstate
+*.tfstate.*
+
+
+# STREAMLIT CACHE
+
+
+.streamlit/
+
+
+# NODE (IF FRONTEND ADDED)
+
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+# MISC
+
+
+*.bak
+*.backup
+*.old
