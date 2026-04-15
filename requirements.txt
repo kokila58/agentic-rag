@@ -4,8 +4,9 @@ python-dotenv
 
 langchain
 langgraph
+langchain-text-splitters
 
-google-generativeai
+google-genai
 
 qdrant-client
 
