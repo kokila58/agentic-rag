@@ -5,7 +5,6 @@ settings = get_settings()
 
 client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
-
 class EmbeddingService:
 
     def create_embedding(self, text: str):
@@ -16,6 +15,5 @@ class EmbeddingService:
         )
 
         return response.embeddings[0].values
-
 
 embedding_service = EmbeddingService()

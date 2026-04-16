@@ -1,20 +1,19 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-
 from app.agents.rag_agent import rag_agent
 
 class ChatRequest(BaseModel):
     question: str
-
+    session_id: str
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
-
 
 @router.post("/")
 def chat_with_documents(request: ChatRequest):
 
     result = rag_agent.invoke({
-        "question": request.question
+        "question": request.question,
+        "session_id": request.session_id
     })
 
     return {

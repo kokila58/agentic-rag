@@ -1,15 +1,13 @@
 from fastapi import APIRouter, UploadFile, File
 import os
 import shutil
-
+from fastapi import HTTPException
 from app.ingestion.document_loader import load_pdf
-
 from app.services.document_service import add_document, list_documents
 from app.services.document_service import delete_document
-
+from fastapi import BackgroundTasks
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
-
 
 @router.post("/upload")
 async def upload_document(file: UploadFile = File(...)):
@@ -31,6 +29,7 @@ async def upload_document(file: UploadFile = File(...)):
         "document": document
     }
 
+
 @router.get("/")
 def get_documents():
 
@@ -40,12 +39,14 @@ def get_documents():
         "documents": docs
     }
 
-@router.delete("/{doc_id}")
-def remove_document(doc_id: str):
+@router.delete("/{doc_name}")
+def delete_document(doc_name: str):
 
-    delete_document(doc_id)
+    path = f"storage/documents/{doc_name}"
 
-    return {
-        "message": "Document deleted"
-    }
+    if not os.path.exists(path):
+        raise HTTPException(status_code=404, detail="Document not found")
 
+    os.remove(path)
+
+    return {"message": "Document deleted"}

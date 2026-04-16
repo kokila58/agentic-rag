@@ -1,7 +1,6 @@
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
 import uuid
-
 from app.config.settings import get_settings
 
 settings = get_settings()
@@ -15,7 +14,6 @@ client = QdrantClient(
 )
 
 BATCH_SIZE = 20
-
 
 # Create collection
 def create_collection():

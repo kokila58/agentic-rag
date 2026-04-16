@@ -3,7 +3,6 @@ from app.config.settings import get_settings
 
 settings = get_settings()
 
-
 class GeminiService:
 
     def __init__(self):
@@ -18,7 +17,6 @@ class GeminiService:
         )
 
         return response.text
-
 
 gemini_service = GeminiService()
 

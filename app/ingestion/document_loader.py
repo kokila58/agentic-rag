@@ -1,5 +1,4 @@
 from pypdf import PdfReader
-
 from app.ingestion.chunker import chunk_text
 from app.services.embedding_service import embedding_service
 from app.services.qdrant_service import store_embeddings
