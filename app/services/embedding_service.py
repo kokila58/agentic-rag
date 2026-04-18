@@ -1,21 +1,19 @@
-import google.generativeai as genai
+from google import genai
 from app.config.settings import get_settings
 
 settings = get_settings()
 
-genai.configure(api_key=settings.GEMINI_API_KEY)
-
+client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
 class EmbeddingService:
 
-    def generate_embedding(self, text: str):
+    def create_embedding(self, text: str):
 
-        result = genai.embed_content(
+        response = client.models.embed_content(
             model="gemini-embedding-001",
-            content=text
+            contents=text
         )
 
-        return result["embedding"]
-
+        return response.embeddings[0].values
 
 embedding_service = EmbeddingService()
