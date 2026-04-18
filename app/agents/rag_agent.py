@@ -1,11 +1,8 @@
-from typing import TypedDict, List
+from typing import TypedDict, List, Generator
 from langgraph.graph import StateGraph, END
 from app.services.gemini_service import gemini_service
 from app.tools.retrieval_tool import retrieve_documents
 from app.memory.chat_memory import save_chat
-
-
-
 # Agent State
 
 class AgentState(TypedDict):
@@ -16,7 +13,6 @@ class AgentState(TypedDict):
     answer: str
     session_id: str
 
-
 # Query Rewrite Node
 
 def rewrite_query(state: AgentState):
@@ -24,13 +20,13 @@ def rewrite_query(state: AgentState):
     question = state["question"]
 
     prompt = f"""
-    Rewrite the user question to improve document retrieval.
+Rewrite the user question to improve document retrieval.
 
-    Question:
-    {question}
+Question:
+{question}
 
-    Improved Question:
-    """
+Improved Question:
+"""
 
     improved_question = gemini_service.generate_response(prompt)
 
@@ -38,10 +34,7 @@ def rewrite_query(state: AgentState):
         "rewritten_question": improved_question.strip()
     }
 
-
-
 # Retrieval Node
-
 
 def retrieve(state: AgentState):
 
@@ -53,10 +46,7 @@ def retrieve(state: AgentState):
         "documents": docs
     }
 
-
-
 # Answer Generation Node
-
 
 def generate_answer(state: AgentState):
 
@@ -66,19 +56,19 @@ def generate_answer(state: AgentState):
     context = "\n\n".join(docs)
 
     prompt = f"""
-    You are an AI assistant answering questions from documents.
+You are an AI assistant answering questions from documents.
 
-    Use the provided context to answer accurately.
-    If the answer is not in the context, say you don't know.
+Use the provided context to answer accurately.
+If the answer is not in the context, say you don't know.
 
-    Context:
-    {context}
+Context:
+{context}
 
-    Question:
-    {question}
+Question:
+{question}
 
-    Answer:
-    """
+Answer:
+"""
 
     answer = gemini_service.generate_response(prompt)
 
@@ -87,9 +77,7 @@ def generate_answer(state: AgentState):
     }
 
 
-
 # Memory Node
-
 
 def store_memory(state: AgentState):
 
@@ -102,10 +90,7 @@ def store_memory(state: AgentState):
     return {}
 
 
-
 # Build Agent Graph
-
-
 def build_agent():
 
     workflow = StateGraph(AgentState)
@@ -120,10 +105,49 @@ def build_agent():
     workflow.add_edge("rewrite", "retrieve")
     workflow.add_edge("retrieve", "generate")
     workflow.add_edge("generate", "memory")
-
     workflow.add_edge("memory", END)
 
     return workflow.compile()
 
 
 rag_agent = build_agent()
+
+
+# STREAMING FUNCTION
+
+def stream_rag_answer(question: str, session_id: str) -> Generator[str, None, None]:
+
+    # Step 1 → Run rewrite + retrieve
+    result = rag_agent.invoke({
+        "question": question,
+        "session_id": session_id
+    })
+
+    docs = result["documents"]
+
+    context = "\n\n".join(docs)
+
+    prompt = f"""
+You are an AI assistant answering questions from documents.
+
+Use the provided context to answer accurately.
+
+Context:
+{context}
+
+Question:
+{question}
+
+Answer:
+"""
+
+    full_answer = ""
+
+    # STREAM tokens
+    for token in gemini_service.stream_response(prompt):
+
+        full_answer += token
+        yield token
+
+    # Save memory after streaming completes
+    save_chat(session_id, question, full_answer)
